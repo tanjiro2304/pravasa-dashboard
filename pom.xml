@@ -48,6 +48,21 @@
             <version>2.1.0</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>info.pravasa</groupId>-->
+<!--            <artifactId>pravasa-dto</artifactId>-->
+<!--            <version>1.0.0-SNAPSHOT</version>-->
+<!--&lt;!&ndash;            <scope>compile</scope>&ndash;&gt;-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

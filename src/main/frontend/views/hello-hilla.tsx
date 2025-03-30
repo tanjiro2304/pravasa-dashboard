@@ -1,3 +1,4 @@
+
 import { ViewConfig } from '@vaadin/hilla-file-router/types.js';
 import { useSignal } from '@vaadin/hilla-react-signals';
 import { Button, Notification, TextField } from '@vaadin/react-components';
