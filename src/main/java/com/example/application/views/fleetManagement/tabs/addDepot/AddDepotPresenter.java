@@ -1,13 +1,11 @@
-package com.example.application.views.NewDepots.tabs.addDepot;
+package com.example.application.views.fleetManagement.tabs.addDepot;
 
 import com.example.application.dto.CompanyDto;
 import com.example.application.dto.DepotDto;
 import com.example.application.services.CompanyService;
 import com.example.application.services.DepotService;
-import com.example.application.views.NewDepots.FleetManagementView;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import jakarta.annotation.Resource;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -24,8 +22,8 @@ public class AddDepotPresenter {
         return companyService.findAll();
     }
 
-    public List<DepotDto> getDataForGrid() {
-        return depotService.findDepotByCompanyId(1L);
+    public List<DepotDto> findDepotByCompanyId(Long companyId) {
+        return depotService.findDepotByCompanyId(companyId);
     }
 
 //    public void onSave(DepotDto dto) {

@@ -1,4 +1,4 @@
-package com.example.application.views.NewDepots.tabs.addNewModels;
+package com.example.application.views.fleetManagement.tabs.addNewModels;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 

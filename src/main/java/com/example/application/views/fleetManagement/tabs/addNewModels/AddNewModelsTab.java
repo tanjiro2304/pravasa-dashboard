@@ -1,7 +1,6 @@
-package com.example.application.views.NewDepots.tabs.addNewModels;
+package com.example.application.views.fleetManagement.tabs.addNewModels;
 
 import com.example.application.dto.BusType;
-import com.example.application.views.NewDepots.FleetManagementPresenter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;

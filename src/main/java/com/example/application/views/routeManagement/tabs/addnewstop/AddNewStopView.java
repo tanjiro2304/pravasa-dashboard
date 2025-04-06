@@ -1,12 +1,11 @@
-package com.example.application.views.NewRoutes.components;
+package com.example.application.views.routeManagement.tabs.addnewstop;
 
 import com.example.application.dto.CompanyDto;
 import com.example.application.dto.StopDto;
-import com.example.application.views.NewRoutes.RouteManagementPresenter;
+import com.example.application.views.routeManagement.RouteManagementPresenter;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -15,7 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 
 
-public class AddNewStopDialog extends Dialog {
+public class AddNewStopView extends VerticalLayout {
     private TextField stopName;
     private Long companyId;
     private NumberField longitude;
@@ -25,7 +24,7 @@ public class AddNewStopDialog extends Dialog {
     private Button save;
     private Button cancel;
     private Binder<StopDto> binder;
-    public AddNewStopDialog(RouteManagementPresenter routeManagementPresenter) {
+    public AddNewStopView(RouteManagementPresenter routeManagementPresenter) {
         this.routeManagementPresenter = routeManagementPresenter;
         initializeFields();
         initializeLayout();
@@ -52,7 +51,7 @@ public class AddNewStopDialog extends Dialog {
     }
 
     private void initializeLayout(){
-        setHeaderTitle("Add New Bus Stop");
+
         VerticalLayout mainLayout = new VerticalLayout(createRow(stopName,latitude),createRow(longitude,comboBox),createRow(save,cancel));
         mainLayout.setWidth("100%");
         mainLayout.setHeight("100%");

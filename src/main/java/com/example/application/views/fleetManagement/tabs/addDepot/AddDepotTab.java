@@ -1,20 +1,20 @@
-package com.example.application.views.NewDepots.tabs.addDepot;
+package com.example.application.views.fleetManagement.tabs.addDepot;
 
 import com.example.application.dto.CompanyDto;
 import com.example.application.dto.DepotDto;
 import com.example.application.utils.Icons;
-import com.example.application.views.components.AddBusType;
-import com.example.application.views.components.AddCompanyDialog;
-import com.example.application.views.components.AddDepotDialog;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabSheet;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class AddDepotTab extends VerticalLayout {
@@ -23,14 +23,13 @@ public class AddDepotTab extends VerticalLayout {
     private final ComboBox<CompanyDto> companyDtoComboBox;
     private final AddDepotPresenter addDepotPresenter;
     private HorizontalLayout btnLayout;
-    private TabSheet tabSheet;
+    private final TabSheet tabSheet;
 
     public AddDepotTab(AddDepotPresenter addDepotPresenter) {
         this.addDepotPresenter = addDepotPresenter;
-        tabSheet = new TabSheet();
+        this.tabSheet = new TabSheet();
         companyDtoComboBox = new ComboBox<>("Select a Company", addDepotPresenter.getCompanies());
         companyDtoComboBox.setItemLabelGenerator(CompanyDto::getCompanyName);
-
         initializeLayout();
     }
 
@@ -40,7 +39,6 @@ public class AddDepotTab extends VerticalLayout {
         initializeButtonLayout();
         setSizeFull();
         tabSheet.add("List Of Depots", new VerticalLayout(companyDtoComboBox,btnLayout,depotDtoGrid));
-        tabSheet.add("Add New Depot", new AddDepotDialog());
         tabSheet.setSizeFull();
         add(tabSheet);
     }
@@ -48,13 +46,22 @@ public class AddDepotTab extends VerticalLayout {
     private void initializeButtonLayout() {
         Button submitButton = new Button("Submit");
         btnLayout = new HorizontalLayout(submitButton);
+        submitButton.addClickListener(event -> {
+            if(Objects.nonNull(companyDtoComboBox.getValue())) {
+                setDataInGrid(companyDtoComboBox.getValue().getId());
+            }
+            else{
+                Notification.show("Please Select a Comapny",5000, Notification.Position.MIDDLE);
+                depotDtoGrid.setItems(new ArrayList<>());
+            }
+        });
     }
 
     private void initializeGrid() {
         depotDtoGrid = new Grid<>();
         initializeColumns();
         initializeGridListeners();
-        setDataInGrid();
+
     }
 
     private void initializeColumns() {
@@ -119,8 +126,14 @@ public class AddDepotTab extends VerticalLayout {
 //        });
     }
 
-    public void setDataInGrid(){
-        depotDtoGrid.setItems(addDepotPresenter.getDataForGrid());
-        depotDtoGrid.getDataProvider().refreshAll();
+    public void setDataInGrid(Long id){
+        List<DepotDto> depots = addDepotPresenter.findDepotByCompanyId(id);
+        if(CollectionUtils.isEmpty(depots)){
+            Notification.show("No Data for this company",5000, Notification.Position.MIDDLE);
+        }else{
+            depotDtoGrid.setItems(depots);
+            depotDtoGrid.getDataProvider().refreshAll();
+        }
+
     }
 }
