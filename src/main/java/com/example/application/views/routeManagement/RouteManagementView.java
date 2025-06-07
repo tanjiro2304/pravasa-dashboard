@@ -14,13 +14,15 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.annotation.Secured;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Route Management")
-@Route("")
+@Route("route-management")
 @Menu(order = 0, icon = LineAwesomeIconUrl.GLOBE_SOLID)
 @UIScope
 @SpringComponent
+@Secured("ADMIN")
 public class RouteManagementView extends VerticalLayout {
 
 

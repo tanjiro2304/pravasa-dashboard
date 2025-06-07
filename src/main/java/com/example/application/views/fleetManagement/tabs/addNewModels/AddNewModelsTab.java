@@ -36,10 +36,6 @@ public class AddNewModelsTab extends VerticalLayout {
 
     private Checkbox isDiesel;
 
-    private RadioButtonGroup<String> emissionNorms;
-
-    private RadioButtonGroup<String> fleetOwnerShip;
-
     private Binder<BusType> busTypeBinder;
 
     private Button saveButton;
@@ -78,16 +74,8 @@ public class AddNewModelsTab extends VerticalLayout {
         isCNG = new Checkbox("CNG");
         isDiesel = new Checkbox("Diesel");
 
-        emissionNorms = new RadioButtonGroup<>();
-        emissionNorms.setLabel("Emission Norms");
-        emissionNorms.setItems("BS-IV", "BS-VI");
-
-        fleetOwnerShip = new RadioButtonGroup<>();
-        fleetOwnerShip.setLabel("Fleet Ownership");
-        fleetOwnerShip.setItems("Owned", "Wet Lease");
         saveButton = new Button("Save");
         clearButton = new Button("Clear");
-//        setListenersForButtons();
     }
 
 
@@ -103,8 +91,6 @@ public class AddNewModelsTab extends VerticalLayout {
         busTypeBinder.forField(busLength).bind(BusType::getLength, BusType::setLength);
         busTypeBinder.forField(busHeight).bind(BusType::getHeight, BusType::setHeight);
         busTypeBinder.forField(floorHeight).bind(BusType::getFloorHeight, BusType::setFloorHeight);
-        busTypeBinder.forField(emissionNorms).bind(BusType::getEmissionNorms, BusType::setEmissionNorms);
-        busTypeBinder.forField(fleetOwnerShip).bind(BusType::getFleetOwnership, BusType::setFleetOwnership);
         busTypeBinder.forField(rangeInKm).bind(BusType::getRangeInKm, BusType::setRangeInKm);
     }
 
@@ -114,10 +100,8 @@ public class AddNewModelsTab extends VerticalLayout {
         mainLayout.add(
                 createRow(title),
                 createRow(modelName, manufacturer),
-                createRow(isElectric, isCNG,isDiesel,isAirConditioned),
-                createRow(busLength, busHeight,rangeInKm),
-                createRow(floorHeight, emissionNorms),
-                createRow(fleetOwnerShip),
+                createRow(isElectric, isCNG,isDiesel),
+                createRow(floorHeight),
                 createRow(saveButton, clearButton)
         );
         mainLayout.setPadding(true);
