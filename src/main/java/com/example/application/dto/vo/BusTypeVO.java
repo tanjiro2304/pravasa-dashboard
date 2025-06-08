@@ -1,8 +1,7 @@
 package com.example.application.dto.vo;
 
-import com.example.application.dto.BusType;
+import com.example.application.dto.BusDto;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
@@ -12,7 +11,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 public class BusTypeVO {
-    private BusType busType;
+    private BusDto busType;
     private Integer noOfBuses;
 
     @Override

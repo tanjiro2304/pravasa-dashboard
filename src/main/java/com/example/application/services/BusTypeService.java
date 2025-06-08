@@ -1,8 +1,8 @@
 package com.example.application.services;
 
-import com.example.application.dto.BusType;
-import com.example.application.dto.DepotDto;
+import com.example.application.dto.BusDto;
 import com.google.common.net.HttpHeaders;
+import com.vaadin.flow.server.VaadinSession;
 import lombok.Getter;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -21,24 +21,25 @@ public class BusTypeService {
     private final WebClient webClient;
 
     @Getter
-    private Map<Long, BusType> busTypeMap = new HashMap<>();
+    private Map<Long, BusDto> busTypeMap = new HashMap<>();
 
     public BusTypeService(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public List<BusType> findAll() {
-        List<BusType> types = Objects.requireNonNull(webClient.get().uri("http://localhost:8011/bustypes/findAll")
+    public List<BusDto> findAll() {
+        List<BusDto> types = Objects.requireNonNull(webClient.get().uri("http://localhost:8011/bustypes/findAll")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .retrieve().bodyToFlux(BusType.class).collectList().block());
-        busTypeMap = types.stream().collect(Collectors.toMap(BusType::getBusTypeId, Function.identity()));
+                .retrieve().bodyToFlux(BusDto.class).collectList().block());
+        busTypeMap = types.stream().collect(Collectors.toMap(BusDto::getBusTypeId, Function.identity()));
         return types;
     }
 
-    public void save(BusType dto) {
-        BusType stringMono = webClient.post().uri("http://localhost:8011/bustypes/save")
+    public void save(BusDto dto) {
+        webClient.post().uri("http://localhost:8011/bustypes/save")
                 .bodyValue(dto)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .retrieve().bodyToMono(BusType.class).block();
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + VaadinSession.getCurrent().getAttribute("token"))
+                .retrieve().bodyToMono(BusDto.class).block();
     }
 }
