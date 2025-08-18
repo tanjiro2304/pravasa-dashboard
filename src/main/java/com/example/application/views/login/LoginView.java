@@ -1,7 +1,7 @@
 package com.example.application.views.login;
 
-import com.example.application.dto.LoginUserDto;
-import com.example.application.services.LoginService;
+
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -16,7 +16,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import jakarta.annotation.Resource;
+import info.pravasa.dto.UserInfo;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import java.util.Objects;
@@ -36,7 +36,7 @@ public class LoginView extends VerticalLayout {
 
     private FormLayout formLayout;
 
-    private Binder<LoginUserDto> binder;
+    private Binder<UserInfo> binder;
 
     private LoginPresenter loginPresenter;
 
@@ -62,9 +62,9 @@ public class LoginView extends VerticalLayout {
 
     private void initializeBinder() {
         binder = new Binder<>();
-        binder.forField(emailField).bind(LoginUserDto::getEmail,LoginUserDto::setEmail);
-        binder.forField(passwordField).bind(LoginUserDto::getPassword, LoginUserDto::setPassword);
-        binder.setBean(new LoginUserDto());
+        binder.forField(emailField).asRequired().bind(UserInfo::getUsername,UserInfo::setUsername);
+        binder.forField(passwordField).asRequired().bind(UserInfo::getPassword, UserInfo::setPassword);
+        binder.setBean(new UserInfo());
     }
 
     private void initializeField() {
@@ -85,10 +85,11 @@ public class LoginView extends VerticalLayout {
     }
 
     private void onSave(){
-        LoginUserDto login = loginPresenter.userLogin(binder.getBean());
+        UserInfo login = loginPresenter.userLogin(binder.getBean());
+        System.out.println(login.getToken());
         if(Objects.nonNull(login)){
             VaadinSession.getCurrent().setAttribute("token", login.getToken());
-            System.out.println(login.getToken());
+            UI.getCurrent().navigate("/dashBoard");
         }else{
             Notification.show("Invalid Username or Password");
         }

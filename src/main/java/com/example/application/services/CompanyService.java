@@ -1,8 +1,10 @@
 package com.example.application.services;
 
-import com.example.application.dto.CompanyDto;
-import com.example.application.dto.DepotDto;
+
 import com.google.common.net.HttpHeaders;
+import com.vaadin.flow.server.VaadinSession;
+import info.pravasa.dto.Company;
+import info.pravasa.dto.DepotDto;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,24 +22,27 @@ public class CompanyService {
         this.webClient = webClient;
     }
 
-    public Mono<CompanyDto> findById(Long id){
 
-        return webClient.get()
-                .uri("http://localhost:8011/company/findById/{id}", id)
-                .retrieve().bodyToMono(CompanyDto.class);
+    public List<Company> findAll() {
+        return Objects.requireNonNull(webClient.post()
+                .uri("http://localhost:8001/company-service/company/findAll")
+                        .header("Authorization", VaadinSession.getCurrent().getAttribute("token").toString())
+                .retrieve().bodyToFlux(Company.class).collectList().block());
     }
 
-    public List<CompanyDto> findAll() {
-        return Objects.requireNonNull(webClient.get()
-                .uri("http://localhost:8011/company/findAll")
-                .retrieve().bodyToFlux(CompanyDto.class).collectList().block());
-    }
-
-    public void save(CompanyDto bean) {
-            CompanyDto stringMono = webClient.post().uri("http://localhost:8011/company/save")
+    public void save(Company bean) {
+            Company stringMono = webClient.post().uri("http://localhost:8011/company/save")
                     .bodyValue(bean)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .retrieve().bodyToMono(CompanyDto.class).block();
+                    .retrieve().bodyToMono(Company.class).block();
 
+    }
+
+    public List<DepotDto> fetchDepotByCompany(Long companyId) {
+        return Objects.requireNonNull(webClient.post()
+                .uri("http://localhost:8001/bus-service/depot/findAll")
+                .bodyValue(companyId)
+                .header("Authorization", VaadinSession.getCurrent().getAttribute("token").toString())
+                .retrieve().bodyToFlux(DepotDto.class).collectList().block());
     }
 }
