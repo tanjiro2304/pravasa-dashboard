@@ -1,69 +1,67 @@
-package com.example.application.views.dashboard.roadTransport;
+package info.pravasa.application.views.dashboard.roadTransport.tabs;
 
-
-
-
-import com.example.application.utils.CommonComponent;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.NativeLabel;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.validator.EmailValidator;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import info.pravasa.application.utils.CommonComponent;
+import info.pravasa.application.views.dashboard.roadTransport.components.FleetInformationDialog;
 import info.pravasa.dto.Company;
+import info.pravasa.dto.ContractorDto;
 import info.pravasa.dto.DepotDto;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @UIScope
 @SpringComponent
-public class RoadTransportView extends VerticalLayout {
-
-    @Resource
-    private RoadTransportPresenter roadTransportPresenter;
-
-    private ComboBox<Company> companyComboBox;
-
-    private TabSheet tabSheet;
-
-
+public class DepotTab extends VerticalLayout {
     @Setter
     private Company selectedCompany;
+    @Setter
+    private Function<Long, List<DepotDto>> depotFunction;
+    @Setter
+    private Consumer<DepotDto> depotDtoConsumer;
+
+    @Setter
+    private Supplier<List<Company>> companySupplier;
+
     private DepotDto selectedDepot;
     private NativeLabel title;
-    private HorizontalLayout depotTab;
+    private HorizontalLayout mainLayout;
     private Grid<DepotDto> depotDtoGrid;
     private Binder<DepotDto> binder;
+    private VerticalLayout fieldsLayout;
+
 
     @PostConstruct
     private void init(){
-        initializeCompanyComboBox();
-        initializeTitle();
-        initializeDepotTab();
-        initializeDepotGrid();
-        initializeTab();
-        initializeSlideTab();
-        add(companyComboBox, tabSheet);
+        setSizeFull();
+        initializeComponents();
+        initializeGrid();
+        mainLayout = new HorizontalLayout(fieldsLayout,depotDtoGrid);
+        mainLayout.setSizeFull();
+        add(mainLayout);
     }
 
-    private void initializeDepotTab(){
-        this.depotTab = new HorizontalLayout();
+    private void initializeComponents() {
         TextField depotName = CommonComponent.createTextField("Depot Name", true,true);
         TextField depotCode = CommonComponent.createTextField("Depot Code", true,true);
         NumberField longitude = CommonComponent.createNumberField("Latitude", true,true);
@@ -72,10 +70,10 @@ public class RoadTransportView extends VerticalLayout {
         TextField contact = CommonComponent.createTextField("Contact", true,true);
         TextField address = CommonComponent.createTextField("Address", true,true);
         Button submitButton = new Button("Submit");
-        VerticalLayout fieldsLayout = new VerticalLayout(new HorizontalLayout(depotName,depotCode),
+        fieldsLayout = new VerticalLayout(new HorizontalLayout(depotName,depotCode),
                 new HorizontalLayout(latitude,longitude),
                 new HorizontalLayout(email,contact),address,submitButton);
-        fieldsLayout.setWidth("50%");
+        fieldsLayout.setSizeFull();
         binder = new Binder<>();
         binder.forField(depotName)
                 .asRequired("Depot Name is required")
@@ -117,7 +115,7 @@ public class RoadTransportView extends VerticalLayout {
                     if(selectedDepot.getCompanyId() == null){
                         selectedDepot.setCompanyId(selectedCompany.getId());
                     }
-                    roadTransportPresenter.saveData(selectedDepot);
+                    depotDtoConsumer.accept(selectedDepot);
                     refreshGrid();
                     binder.readBean(new DepotDto());
                 }else{
@@ -128,16 +126,9 @@ public class RoadTransportView extends VerticalLayout {
                 throw new RuntimeException(e);
             }
         });
-        depotTab.add(fieldsLayout);
     }
 
-    private void refreshGrid(){
-        depotDtoGrid.setItems(roadTransportPresenter.fetchDepotByCompany(selectedCompany.getId()));
-
-    }
-
-
-    private void initializeDepotGrid() {
+    private void initializeGrid(){
         depotDtoGrid = new Grid<>();
         depotDtoGrid.addColumn(DepotDto::getDepotName).setHeader("Depot Name");
         depotDtoGrid.addColumn(DepotDto::getDepotCode).setHeader("Depot Code");
@@ -148,33 +139,23 @@ public class RoadTransportView extends VerticalLayout {
             selectedDepot = event.getItem();
             binder.readBean(selectedDepot);
         });
-        depotTab.add(depotDtoGrid);
+
+        depotDtoGrid.addColumn(LitRenderer.<DepotDto>of(
+                        "<vaadin-button theme='primary small' @click=${handleEdit}>Edit</vaadin-button>")
+                .withFunction("handleEdit", item -> {
+                    FleetInformationDialog dialog = new FleetInformationDialog(item);
+                    dialog.open();
+                })
+        ).setHeader("Actions");
+
+        depotDtoGrid.setSizeFull();
     }
 
-    private void initializeTitle() {
-    }
-
-    private void initializeCompanyComboBox() {
-        companyComboBox = new ComboBox<>();
-        companyComboBox.setItems(roadTransportPresenter.fetchAllCompanies());
-        companyComboBox.setItemLabelGenerator(Company::getCompanyName);
-        companyComboBox.setWidth("25rem");
-        companyComboBox.addValueChangeListener(event ->{
-            setSelectedCompany(event.getValue());
-            depotDtoGrid.setItems(roadTransportPresenter.fetchDepotByCompany(selectedCompany.getId()));
-        });
-    }
-
-    private void initializeTab() {
-        tabSheet = new TabSheet();
-        tabSheet.setSizeFull();
-        tabSheet.add("Stats",new VerticalLayout());
-        tabSheet.add("Depots",depotTab);
-        tabSheet.add("Routes",new VerticalLayout());
-        tabSheet.add("Photos",new VerticalLayout());
-    }
-
-    private void initializeSlideTab(){
-
+    public void refreshGrid(){
+        if(Objects.isNull(selectedCompany)){
+            depotDtoGrid.setItems(Collections.emptyList());
+            return;
+        }
+        depotDtoGrid.setItems(depotFunction.apply(selectedCompany.getId()));
     }
 }

@@ -1,7 +1,7 @@
-package com.example.application.views.login;
+package info.pravasa.application.views.login;
 
 
-import com.example.application.services.LoginService;
+import info.pravasa.application.services.LoginService;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import info.pravasa.dto.UserInfo;

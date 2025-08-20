@@ -1,4 +1,4 @@
-package com.example.application.utils;
+package info.pravasa.application.utils;
 
 import com.vaadin.flow.component.html.Span;
 

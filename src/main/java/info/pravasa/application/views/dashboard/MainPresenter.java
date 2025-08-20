@@ -1,4 +1,4 @@
-package com.example.application.views.dashboard;
+package info.pravasa.application.views.dashboard;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;

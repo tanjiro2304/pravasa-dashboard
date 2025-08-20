@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- Project from https://start.vaadin.com/project/9509a5bc-5bad-4808-be35-cc970a965a54 -->
-    <groupId>com.example.application</groupId>
+    <groupId>info.pravasa.application</groupId>
     <artifactId>pravasa-vaadin</artifactId>
     <name>pravasa-vaadin</name>
     <version>1.0-SNAPSHOT</version>

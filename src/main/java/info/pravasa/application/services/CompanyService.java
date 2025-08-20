@@ -1,14 +1,14 @@
-package com.example.application.services;
+package info.pravasa.application.services;
 
 
 import com.google.common.net.HttpHeaders;
 import com.vaadin.flow.server.VaadinSession;
+import info.pravasa.dto.City;
 import info.pravasa.dto.Company;
 import info.pravasa.dto.DepotDto;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,9 +30,18 @@ public class CompanyService {
                 .retrieve().bodyToFlux(Company.class).collectList().block());
     }
 
+
+    public List<City> findAllCities() {
+        return Objects.requireNonNull(webClient.get()
+                .uri("http://localhost:8001/company-service/city/findAll")
+                .header("Authorization", VaadinSession.getCurrent().getAttribute("token").toString())
+                .retrieve().bodyToFlux(City.class).collectList().block());
+    }
+
     public void save(Company bean) {
-            Company stringMono = webClient.post().uri("http://localhost:8011/company/save")
+           webClient.post().uri("http://localhost:8001/company-service/company/save")
                     .bodyValue(bean)
+                   .header("Authorization", VaadinSession.getCurrent().getAttribute("token").toString())
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .retrieve().bodyToMono(Company.class).block();
 

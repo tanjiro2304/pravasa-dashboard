@@ -1,4 +1,4 @@
-package com.example.application.views.login;
+package info.pravasa.application.views.login;
 
 
 import com.vaadin.flow.component.UI;

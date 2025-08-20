@@ -1,0 +1,4 @@
+vaadin-tabsheet::part(content) {
+    overflow: hidden !important;   /* removes scrollbar */
+    height: 100% !important;       /* force fill available space */
+}

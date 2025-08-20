@@ -1,4 +1,4 @@
-package com.example.application.services;
+package info.pravasa.application.services;
 
 
 import com.google.common.net.HttpHeaders;

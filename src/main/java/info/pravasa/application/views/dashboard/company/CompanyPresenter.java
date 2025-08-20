@@ -1,10 +1,10 @@
-package com.example.application.views.dashboard.roadTransport;
+package info.pravasa.application.views.dashboard.company;
 
-import com.example.application.services.CompanyService;
-import com.example.application.services.DepotService;
-import com.example.application.views.dashboard.company.CompanyView;
+import info.pravasa.application.services.CompanyService;
+import info.pravasa.application.services.DepotService;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import info.pravasa.dto.City;
 import info.pravasa.dto.Company;
 import info.pravasa.dto.DepotDto;
 import jakarta.annotation.Resource;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @UIScope
 @SpringComponent
-public class RoadTransportPresenter {
+public class CompanyPresenter {
 
     @Resource
     private CompanyService companyService;
@@ -32,5 +32,13 @@ public class RoadTransportPresenter {
 
     public void saveData (DepotDto depotDto){
         depotService.save(depotDto);
+    }
+
+    public List<City> fetchAllCities() {
+        return companyService.findAllCities();
+    }
+
+    public void saveCompany(Company newCompany) {
+        companyService.save(newCompany);
     }
 }

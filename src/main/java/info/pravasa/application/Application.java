@@ -1,4 +1,4 @@
-package com.example.application;
+package info.pravasa.application;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
