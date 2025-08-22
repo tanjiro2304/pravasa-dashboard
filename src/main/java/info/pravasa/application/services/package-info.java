@@ -1,4 +1,4 @@
 @NonNullApi
-package com.example.application.services;
+package info.pravasa.application.services;
 
 import org.springframework.lang.NonNullApi;

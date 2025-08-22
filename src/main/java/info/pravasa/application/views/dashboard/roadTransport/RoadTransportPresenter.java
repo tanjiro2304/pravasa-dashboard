@@ -1,13 +1,9 @@
 package info.pravasa.application.views.dashboard.roadTransport;
 
-import info.pravasa.application.services.BusModelService;
-import info.pravasa.application.services.CompanyService;
-import info.pravasa.application.services.DepotService;
+import info.pravasa.application.services.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import info.pravasa.dto.BusModelDto;
-import info.pravasa.dto.Company;
-import info.pravasa.dto.DepotDto;
+import info.pravasa.dto.*;
 import info.pravasa.dto.filters.BusModelFilter;
 import jakarta.annotation.Resource;
 
@@ -27,6 +23,12 @@ public class RoadTransportPresenter {
 
     @Resource
     private BusModelService busModelService;
+
+    @Resource
+    private StopService stopService;
+
+    @Resource
+    private RouteService routeService;
 
 
     public List<Company> fetchAllCompanies(){
@@ -50,5 +52,18 @@ public class RoadTransportPresenter {
 
     public List<BusModelDto> fetchAllModels() {
         return busModelService.fetchAllModels(new BusModelFilter());
+    }
+
+    public void saveStop(StopDto stopDto){
+        stopService.save(stopDto);
+    }
+
+
+    public List<StopDto> findStop(Long companyId){
+        return stopService.findAll(companyId);
+    }
+
+    public void saveRoute(RouteDto routeDto) {
+        routeService.save(routeDto);
     }
 }

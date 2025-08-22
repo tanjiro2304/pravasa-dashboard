@@ -26,7 +26,9 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import info.pravasa.application.views.dashboard.roadTransport.components.AddBusModel;
 import info.pravasa.application.views.dashboard.roadTransport.tabs.DepotTab;
+import info.pravasa.application.views.dashboard.roadTransport.tabs.ManualData;
 import info.pravasa.application.views.dashboard.roadTransport.tabs.RoutesTab;
+import info.pravasa.application.views.dashboard.roadTransport.tabs.StopTab;
 import info.pravasa.dto.Company;
 import info.pravasa.dto.DepotDto;
 import jakarta.annotation.PostConstruct;
@@ -48,6 +50,12 @@ public class RoadTransportView extends VerticalLayout {
     @Resource
     private RoutesTab routesTab;
 
+    @Resource
+    private StopTab stopsTab;
+
+    @Resource
+    private ManualData manualData;
+
     private ComboBox<Company> companyComboBox;
 
     private TabSheet tabSheet;
@@ -65,6 +73,8 @@ public class RoadTransportView extends VerticalLayout {
         if(CommonUtils.verifyUserLogin()){
             depotTab.setDepotFunction(id -> roadTransportPresenter.fetchDepotByCompany(id));
             depotTab.setDepotDtoConsumer(dto -> roadTransportPresenter.saveData(dto));
+            stopsTab.setStopDtoConsumer(dto -> roadTransportPresenter.saveStop(dto));
+            stopsTab.setListConsumer((id) -> roadTransportPresenter.findStop(id));
             initializeMenuBar();
             setSizeFull();
             initializeCompanyComboBox();
@@ -91,7 +101,12 @@ public class RoadTransportView extends VerticalLayout {
         companyComboBox.setWidth("25rem");
         companyComboBox.addValueChangeListener(event ->{
             depotTab.setSelectedCompany(event.getValue());
+            routesTab.setDepotDtoSupplier(() -> roadTransportPresenter.fetchDepotByCompany(event.getValue().getId()));
+            routesTab.setDepotCombox();
+            routesTab.setRouteDtoConsumer(routeDto -> roadTransportPresenter.saveRoute(routeDto));
+            stopsTab.setSelectedCompany(event.getValue());
             depotTab.refreshGrid();
+            stopsTab.refreshGrid();
         });
 
 
@@ -103,7 +118,9 @@ public class RoadTransportView extends VerticalLayout {
         tabSheet.add("Stats",new VerticalLayout());
         tabSheet.add("Depots",depotTab);
         tabSheet.add("Routes",routesTab);
+        tabSheet.add("Stops",stopsTab);
         tabSheet.add("Photos",new VerticalLayout());
+        tabSheet.add("Manual Data",manualData);
     }
 
 }
