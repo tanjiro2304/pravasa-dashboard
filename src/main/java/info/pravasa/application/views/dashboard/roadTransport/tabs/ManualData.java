@@ -34,7 +34,7 @@ public class ManualData extends VerticalLayout {
 
     @Resource
     private DepotService depotService;
-    private List<String> dataTypes = List.of( "Route", "Halt", "Depot", "Company");
+    private List<String> dataTypes = List.of( "Route", "Halt", "Depot", "Company", "Stop");
 
     @PostConstruct
     private void init(){

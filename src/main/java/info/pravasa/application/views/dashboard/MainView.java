@@ -2,6 +2,7 @@ package info.pravasa.application.views.dashboard;
 
 import info.pravasa.application.utils.CommonComponent;
 import info.pravasa.application.views.dashboard.company.CompanyView;
+import info.pravasa.application.views.dashboard.metro.MetroDashboardView;
 import info.pravasa.application.views.dashboard.roadTransport.RoadTransportView;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
@@ -26,6 +27,9 @@ public class MainView extends VerticalLayout {
     @Resource
     private RoadTransportView roadTransportView;
 
+    @Resource
+    private MetroDashboardView metroDashboardView;
+
     private TabSheet tabSheet;
 
     private Tabs tabs;
@@ -47,7 +51,7 @@ public class MainView extends VerticalLayout {
         tabSheet.setSizeFull();
         tabSheet.add("Company", CommonComponent.createTabLayout(companyView));
         tabSheet.add("Road Transport", CommonComponent.createTabLayout(roadTransportView));
-        tabSheet.add("Metro", new VerticalLayout());
+        tabSheet.add("Metro", CommonComponent.createTabLayout(metroDashboardView));
         tabSheet.add("Railways", new VerticalLayout());
         tabSheet.add("Water Transport", new VerticalLayout());
     }
