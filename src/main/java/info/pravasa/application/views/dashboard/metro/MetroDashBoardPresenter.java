@@ -5,10 +5,12 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import info.pravasa.application.services.metro.MetroLineService;
 import info.pravasa.application.services.metro.OperatorService;
 import info.pravasa.application.services.metro.PlanningAuthorityService;
+import info.pravasa.dto.MetroLineDto;
 import info.pravasa.dto.OperatorDto;
 import info.pravasa.dto.PlanningAuthorityDto;
 import jakarta.annotation.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @UIScope
@@ -38,5 +40,12 @@ public class MetroDashBoardPresenter {
 
     public List<PlanningAuthorityDto> findAllPlanningAuthority(){
         return planningAuthorityService.findAll();
+    }
+
+    public List<MetroLineDto> findAllMetroLines() {
+        return new ArrayList<>();
+    }
+
+    public void saveMetroLine(Object dto) {
     }
 }

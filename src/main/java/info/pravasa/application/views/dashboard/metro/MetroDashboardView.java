@@ -34,7 +34,7 @@ public class MetroDashboardView extends VerticalLayout {
     }
 
     private void initializeTabs() {
-        metroLineView = new MetroLineView();
+        metroLineView = new MetroLineView( () -> metroDashBoardPresenter.findAllMetroLines(), dto -> metroDashBoardPresenter.saveMetroLine(dto));
         operatorView = new OperatorView(dto -> metroDashBoardPresenter.save(dto),() -> metroDashBoardPresenter.findAll());
         planningAuthorityView = new PlanningAuthorityView( dto -> metroDashBoardPresenter.save(dto), () -> metroDashBoardPresenter.findAllPlanningAuthority());
     }

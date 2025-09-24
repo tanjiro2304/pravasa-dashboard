@@ -103,7 +103,9 @@ public class RoadTransportView extends VerticalLayout {
             depotTab.setSelectedCompany(event.getValue());
             routesTab.setDepotDtoSupplier(() -> roadTransportPresenter.fetchDepotByCompany(event.getValue().getId()));
             routesTab.setDepotCombox();
-            routesTab.setRouteDtoConsumer(routeDto -> roadTransportPresenter.saveRoute(routeDto));
+            routesTab.setRouteDtoConsumer(routeDto -> {
+                roadTransportPresenter.saveRoute(routeDto);
+            });
             stopsTab.setSelectedCompany(event.getValue());
             depotTab.refreshGrid();
             stopsTab.refreshGrid();
